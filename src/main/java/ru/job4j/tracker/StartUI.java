@@ -5,5 +5,7 @@ public class StartUI {
         Tracker tracker = new Tracker();
         tracker.add(new Item("error"));
         System.out.println(tracker.findById(1).getName());
+        Item item = new Item("To string");
+        System.out.println(item);
     }
 }
