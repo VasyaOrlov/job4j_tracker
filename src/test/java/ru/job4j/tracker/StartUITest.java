@@ -71,4 +71,36 @@ public class StartUITest {
                         "0. Exit Program" + System.lineSeparator()
         ));
     }
+
+    @Test
+    public void whenShowAllAction() {
+        Output out = new StubOutput();
+        Input in = new StubInput(new String[] {"0", "a", "1", "2"});
+        Tracker tracker = new Tracker();
+        UserAction[] actions = {
+                new CreateAction(out),
+                new ShowAllAction(out),
+                new ExitAction(out)
+        };
+        String ln = System.lineSeparator();
+        new StartUI(out).init(in, tracker, actions);
+        assertThat(out.toString(), is(
+                "Menu:" + ln
+                + "0. Add new Item" + ln
+                + "1. Show all items" + ln
+                + "2. Exit Program" + ln
+                + "=== Create a new Item ====" + ln
+                + "Добавленная заявка: Item{id=1, name='a'}" + ln
+                + "Menu:" + ln
+                + "0. Add new Item" + ln
+                + "1. Show all items" + ln
+                + "2. Exit Program" + ln
+                + "=== Show all items ====" + ln
+                + "Item{id=1, name='a'}" + ln
+                + "Menu:" + ln
+                + "0. Add new Item" + ln
+                + "1. Show all items" + ln
+                + "2. Exit Program" +ln
+        ));
+    }
 }
