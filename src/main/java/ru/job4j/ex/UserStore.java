@@ -7,13 +7,13 @@ public class UserStore {
         for (User value : users) {
             if (value.getUsername().equals(login)) {
                 user = value;
+                break;
             }
         }
-        if (user != null) {
-            return user;
-        } else {
+        if (user == null) {
             throw new UserNotFoundException("Пользователь не найден");
         }
+        return user;
     }
 
     public static boolean validate(User user) throws UserInvalidException {
