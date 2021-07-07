@@ -18,3 +18,9 @@ notifications:
       -pr_fokl@mail.ru
     on_success: never # default: change
     on_failure: always # default: always
+
+env:
+
+  global:
+
+    - CODECOV_TOKEN="753081b4-1d02-459e-b365-9c87fb842762"
