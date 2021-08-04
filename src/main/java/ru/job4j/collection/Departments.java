@@ -9,8 +9,8 @@ public class Departments {
         for (String value : deps) {
             String start = "";
             for (String el : value.split("/")) {
-                tmp.add(start + el);
-                start = start + el + "/";
+                start = "".equals(start) ? el : start + "/" + el;
+                tmp.add(start);
             }
         }
         return new ArrayList<>(tmp);
@@ -22,5 +22,22 @@ public class Departments {
 
     public static void sortDesc(List<String> orgs) {
         Collections.sort(orgs, new DepDescComp());
+    }
+
+    public static void main(String[] args) {
+        List<String> x = Arrays.asList("k2", "k3/sk1", "k1/sk1/ssk2", "k3/sk2/ssk2");
+        for (String e : fillGaps(x)) {
+            System.out.println(e);
+        }
+        System.out.println();
+        sortDesc(x);
+        for (String e : fillGaps(x)) {
+            System.out.println(e);
+        }
+        System.out.println();
+        sortAsc(x);
+        for (String e : fillGaps(x)) {
+            System.out.println(e);
+        }
     }
 }
