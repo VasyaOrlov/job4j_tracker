@@ -1,6 +1,8 @@
 package ru.job4j.collection;
 
 import org.junit.Test;
+
+import java.util.Arrays;
 import java.util.Comparator;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
@@ -22,7 +24,7 @@ public class JobTest {
 
     @Test
     public void sortJobNameUpTest() {
-        List<Job> jobs = List.of(
+        List<Job> jobs = Arrays.asList(
                 new Job("Fix bug", 1),
                 new Job("Fix bug", 4),
                 new Job("X task", 0),
@@ -40,7 +42,7 @@ public class JobTest {
 
     @Test
     public void sortJobNameDownTest() {
-        List<Job> jobs = List.of(
+        List<Job> jobs = Arrays.asList(
                 new Job("Fix bug", 1),
                 new Job("Fix bug", 4),
                 new Job("X task", 0),
@@ -58,7 +60,7 @@ public class JobTest {
 
     @Test
     public void sortJobPrUpTest() {
-        List<Job> jobs = List.of(
+        List<Job> jobs = Arrays.asList(
                 new Job("Fix bug", 1),
                 new Job("Fix bug", 4),
                 new Job("Fix bug", 2),
@@ -76,7 +78,7 @@ public class JobTest {
 
     @Test
     public void sortJobPrDownTest() {
-        List<Job> jobs = List.of(
+        List<Job> jobs = Arrays.asList(
                 new Job("Fix bug", 1),
                 new Job("Fix bug", 4),
                 new Job("Fix bug", 2),
