@@ -3,7 +3,7 @@ package ru.job4j.bank;
 import java.util.Objects;
 
 /**
- * Класс описывает модель банковского счета
+ * Класс описывает модель банковского счета!
  * @author Vasiliy Orlov
  * @version 1.0
  */
