@@ -89,13 +89,13 @@ public class StartUITest {
                 + "1. Show all items" + ln
                 + "2. Exit Program" + ln
                 + "=== Create a new Item ====" + ln
-                + "Добавленная заявка: Item{id=1, name='a'}" + ln
+                + "Добавленная заявка: id: 1, name: a, created: " + ln
                 + "Menu:" + ln
                 + "0. Add new Item" + ln
                 + "1. Show all items" + ln
                 + "2. Exit Program" + ln
                 + "=== Show all items ====" + ln
-                + "Item{id=1, name='a'}" + ln
+                + "id: 1, name: a, created: " + ln
                 + "Menu:" + ln
                 + "0. Add new Item" + ln
                 + "1. Show all items" + ln

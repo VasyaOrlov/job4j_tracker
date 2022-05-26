@@ -36,18 +36,20 @@ public class SqlTracker implements Store, AutoCloseable {
 
     @Override
     public Item add(Item item) {
-        int rsl = 0;
         try (PreparedStatement ps = cn.prepareStatement(
-                "insert into items (name, created) values (?, ?);"
+                "insert into items (name, created) values (?, ?);",
+                Statement.RETURN_GENERATED_KEYS
         )) {
             ps.setString(1, item.getName());
             ps.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
-            rsl = ps.executeUpdate();
+            ps.execute();
+            try (ResultSet rsKey = ps.getGeneratedKeys()) {
+                if (rsKey.next()) {
+                    item.setId(rsKey.getInt(1));
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        if (rsl == 0) {
-            throw new ConcurrentModificationException("Заявка не добавлена");
         }
         return item;
     }
@@ -88,11 +90,7 @@ public class SqlTracker implements Store, AutoCloseable {
         try (Statement ps = cn.createStatement()) {
             try (ResultSet rs = ps.executeQuery("select * from items;")) {
                 while (rs.next()) {
-                    Item item = new Item(
-                            rs.getInt("id"),
-                            rs.getString("name")
-                    );
-                    item.setCreated(rs.getTimestamp("created").toLocalDateTime());
+                    Item item = getItem(rs);
                     list.add(item);
                 }
             }
@@ -110,11 +108,7 @@ public class SqlTracker implements Store, AutoCloseable {
             ps.setString(1, key);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Item item = new Item(
-                            rs.getInt("id"),
-                            rs.getString("name")
-                    );
-                    item.setCreated(rs.getTimestamp("created").toLocalDateTime());
+                    Item item = getItem(rs);
                     list.add(item);
                 }
             }
@@ -131,14 +125,23 @@ public class SqlTracker implements Store, AutoCloseable {
                 "select * from items where id = ?;")) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    item = new Item(
-                            rs.getInt("id"),
-                            rs.getString("name")
-                    );
-                    item.setCreated(rs.getTimestamp("created").toLocalDateTime());
-                }
+                item = getItem(rs);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return item;
+    }
+
+    private Item getItem(ResultSet rs) {
+        Item item = null;
+        try {
+            item = new Item(
+                    rs.getInt("id"),
+                    rs.getString("name")
+            );
+            item.setCreated(rs.getTimestamp("created").toLocalDateTime());
+            return item;
         } catch (SQLException e) {
             e.printStackTrace();
         }
