@@ -41,7 +41,7 @@ public class SqlTracker implements Store, AutoCloseable {
                 "insert into items (name, created) values (?, ?);"
         )) {
             ps.setString(1, item.getName());
-            ps.setString(2, String.valueOf(Timestamp.valueOf(item.getCreated())));
+            ps.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
             rsl = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -56,11 +56,11 @@ public class SqlTracker implements Store, AutoCloseable {
     public boolean replace(int id, Item item) {
         int rsl = 0;
         try (PreparedStatement ps = cn.prepareStatement(
-                "update users set name = ?, created = ? where id = ?;"
+                "update items set name = ?, created = ? where id = ?;"
         )) {
             ps.setString(1, item.getName());
             ps.setTimestamp(2, Timestamp.valueOf(item.getCreated()));
-            ps.setString(3, String.valueOf(id));
+            ps.setInt(3, id);
             rsl = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -72,9 +72,9 @@ public class SqlTracker implements Store, AutoCloseable {
     public boolean delete(int id) {
         int rsl = 0;
         try (PreparedStatement ps = cn.prepareStatement(
-                "delete from users where id = ?;"
+                "delete from items where id = ?;"
         )) {
-            ps.setString(1, String.valueOf(id));
+            ps.setInt(1, id);
             rsl = ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,13 +86,13 @@ public class SqlTracker implements Store, AutoCloseable {
     public List<Item> findAll() {
         List<Item> list = new ArrayList<>();
         try (Statement ps = cn.createStatement()) {
-            try (ResultSet rs = ps.executeQuery("select * from users;")) {
+            try (ResultSet rs = ps.executeQuery("select * from items;")) {
                 while (rs.next()) {
                     Item item = new Item(
                             rs.getInt("id"),
                             rs.getString("name")
                     );
-                    item.setCreated(rs.getTimestamp("create").toLocalDateTime());
+                    item.setCreated(rs.getTimestamp("created").toLocalDateTime());
                     list.add(item);
                 }
             }
@@ -106,7 +106,7 @@ public class SqlTracker implements Store, AutoCloseable {
     public List<Item> findByName(String key) {
         List<Item> list = new ArrayList<>();
         try (PreparedStatement ps = cn.prepareStatement(
-                "select * from users where name = ?;")) {
+                "select * from items where name = ?;")) {
             ps.setString(1, key);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -114,7 +114,7 @@ public class SqlTracker implements Store, AutoCloseable {
                             rs.getInt("id"),
                             rs.getString("name")
                     );
-                    item.setCreated(rs.getTimestamp("create").toLocalDateTime());
+                    item.setCreated(rs.getTimestamp("created").toLocalDateTime());
                     list.add(item);
                 }
             }
@@ -128,7 +128,7 @@ public class SqlTracker implements Store, AutoCloseable {
     public Item findById(int id) {
         Item item = null;
         try (PreparedStatement ps = cn.prepareStatement(
-                "select * from users where id = ?;")) {
+                "select * from items where id = ?;")) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -136,7 +136,7 @@ public class SqlTracker implements Store, AutoCloseable {
                             rs.getInt("id"),
                             rs.getString("name")
                     );
-                    item.setCreated(rs.getTimestamp("create").toLocalDateTime());
+                    item.setCreated(rs.getTimestamp("created").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
