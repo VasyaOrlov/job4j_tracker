@@ -67,12 +67,11 @@ public class Item implements Comparable<Item> {
             return false;
         }
         Item item = (Item) o;
-        return id == item.id && Objects.equals(name, item.name)
-                && Objects.equals(created.format(FORMATTER), item.created.format(FORMATTER));
+        return id == item.id && Objects.equals(name, item.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, created.format(FORMATTER));
+        return Objects.hash(id, name);
     }
 }
