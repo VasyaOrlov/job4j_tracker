@@ -125,7 +125,9 @@ public class SqlTracker implements Store, AutoCloseable {
                 "select * from items where id = ?;")) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
-                item = getItem(rs);
+                if (rs.next()) {
+                    item = getItem(rs);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -133,18 +135,12 @@ public class SqlTracker implements Store, AutoCloseable {
         return item;
     }
 
-    private Item getItem(ResultSet rs) {
-        Item item = null;
-        try {
-            item = new Item(
-                    rs.getInt("id"),
-                    rs.getString("name")
-            );
-            item.setCreated(rs.getTimestamp("created").toLocalDateTime());
-            return item;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    private Item getItem(ResultSet rs) throws SQLException {
+        Item item = new Item(
+                rs.getInt("id"),
+                rs.getString("name")
+        );
+        item.setCreated(rs.getTimestamp("created").toLocalDateTime());
         return item;
     }
 }
