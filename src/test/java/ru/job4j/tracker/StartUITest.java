@@ -3,6 +3,8 @@ package ru.job4j.tracker;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +84,9 @@ public class StartUITest {
         actions.add(new ShowAllAction(out));
         actions.add(new ExitAction(out));
         String ln = System.lineSeparator();
+        LocalDateTime created = LocalDateTime.now();
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         new StartUI(out).init(in, tracker, actions);
         assertThat(out.toString(), is(
                 "Menu:" + ln
@@ -89,13 +94,13 @@ public class StartUITest {
                 + "1. Show all items" + ln
                 + "2. Exit Program" + ln
                 + "=== Create a new Item ====" + ln
-                + "Добавленная заявка: id: 1, name: a, created: " + ln
+                + "Добавленная заявка: id: 1, name: a, created: " + created.format(formatter) + ln
                 + "Menu:" + ln
                 + "0. Add new Item" + ln
                 + "1. Show all items" + ln
                 + "2. Exit Program" + ln
                 + "=== Show all items ====" + ln
-                + "id: 1, name: a, created: " + ln
+                + "id: 1, name: a, created: " + created.format(formatter) + ln
                 + "Menu:" + ln
                 + "0. Add new Item" + ln
                 + "1. Show all items" + ln
