@@ -72,7 +72,8 @@ public class StartUITest {
         when(input.askStr(any(String.class))).thenReturn("1");
         rep.execute(input, tracker);
         String ln = System.lineSeparator();
-        assertThat(out.toString(), is("=== Delete item ====" + ln + "Заявка удалена успешно." + ln));
+        assertThat(out.toString(),
+                is("=== Delete item ====" + ln + "Заявка удалена успешно." + ln));
         assertNull(tracker.findById(item.getId()));
     }
 
