@@ -9,7 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 public class StartUITest {
 
@@ -56,6 +60,48 @@ public class StartUITest {
         actions.add(new ExitAction(out));
         new StartUI(out).init(in, tracker, actions);
         Assert.assertNull(tracker.findById(item.getId()));
+    }
+
+    @Test
+    public void whenDeleteItemMockito() {
+        Output out = new StubOutput();
+        MemTracker tracker = new MemTracker();
+        Item item = tracker.add(new Item("Deleted item"));
+        DeleteAction rep = new DeleteAction(out);
+        Input input = mock(Input.class);
+        when(input.askStr(any(String.class))).thenReturn("1");
+        rep.execute(input, tracker);
+        String ln = System.lineSeparator();
+        assertThat(out.toString(), is("=== Delete item ====" + ln + "Заявка удалена успешно." + ln));
+        assertNull(tracker.findById(item.getId()));
+    }
+
+    @Test
+    public void whenFindByIdMockito() {
+        Output out = new StubOutput();
+        MemTracker tracker = new MemTracker();
+        Item item = tracker.add(new Item("FindById item"));
+        FindByIdAction rep = new FindByIdAction(out);
+        Input input = mock(Input.class);
+        when(input.askStr(any(String.class))).thenReturn("1");
+        rep.execute(input, tracker);
+        String ln = System.lineSeparator();
+        assertThat(out.toString(), is("=== Find item by id ====" + ln + item + ln));
+        assertThat(tracker.findById(item.getId()), is(item));
+    }
+
+    @Test
+    public void whenFindByNameMockito() {
+        Output out = new StubOutput();
+        MemTracker tracker = new MemTracker();
+        Item item = tracker.add(new Item("FindByName item"));
+        FindByNameAction rep = new FindByNameAction(out);
+        Input input = mock(Input.class);
+        when(input.askStr(any(String.class))).thenReturn(item.getName());
+        rep.execute(input, tracker);
+        String ln = System.lineSeparator();
+        assertThat(out.toString(), is("=== Find items by name ====" + ln + item + ln));
+        assertThat(tracker.findByName(item.getName()), is(List.of(item)));
     }
 
     @Test
