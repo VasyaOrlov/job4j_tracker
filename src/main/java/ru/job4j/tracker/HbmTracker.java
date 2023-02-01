@@ -23,17 +23,18 @@ public class HbmTracker implements Store, AutoCloseable {
     @Override
     public Item add(Item item) {
         Session session = sf.openSession();
+        Item rsl = null;
         try {
             session.beginTransaction();
-            session.save(item);
+            session.persist(item);
+            rsl = item;
             session.getTransaction().commit();
-            session.close();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
             session.close();
         }
-
-        return item;
+        return rsl;
     }
 
     @Override
@@ -45,12 +46,12 @@ public class HbmTracker implements Store, AutoCloseable {
             rsl = session.createQuery(REPLACE)
                     .setParameter("fName", item.getName())
                     .setParameter("fCreated", item.getCreated())
-                    .setParameter("fId", item.getId())
+                    .setParameter("fId", id)
                     .executeUpdate() != 0;
             session.getTransaction().commit();
-            session.close();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
             session.close();
         }
         return rsl;
@@ -66,9 +67,9 @@ public class HbmTracker implements Store, AutoCloseable {
                     .setParameter("fId", id)
                     .executeUpdate() != 0;
             session.getTransaction().commit();
-            session.close();
         } catch (Exception e) {
             session.getTransaction().rollback();
+        } finally {
             session.close();
         }
         return rsl;
@@ -91,9 +92,9 @@ public class HbmTracker implements Store, AutoCloseable {
         List<Item> rsl = session.createQuery(FIND_BY_NAME, Item.class)
                 .setParameter("fName", key)
                 .list();
-        session.beginTransaction().commit();
+        session.getTransaction().commit();
         session.close();
-        return null;
+        return rsl;
     }
 
     @Override
